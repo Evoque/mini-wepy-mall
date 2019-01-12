@@ -13,8 +13,9 @@ module.exports = {
     }
   },
   resolve: {
-    alias: {
-      counter: path.join(__dirname, 'src/components/counter'),
+    alias: { 
+      components: path.join(__dirname, 'src/components'),
+      mixins: path.join(__dirname, 'src/mixins'),
       '@': path.join(__dirname, 'src')
     },
     aliasFields: ['wepy', 'weapp'],

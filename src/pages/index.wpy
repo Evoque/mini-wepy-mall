@@ -6,16 +6,12 @@
 <template>
     <view class="container">
         <h1>Hello, Evoque. Let's mini program </h1>
+        <button @tap="tap" size="mini">测试本机接口</button>
     </view>
 </template>
 
 <script>
 import wepy from 'wepy';
-// import { connect } from 'wepy-redux';
-// import Toast from 'wepy-com-toast';
-
-// @connect({ 
-// })
 
 export default class Index extends wepy.page {
     components = {
@@ -27,10 +23,17 @@ export default class Index extends wepy.page {
     }
 
     methods = {
+        tap() {
+            wepy.request({
+                url: 'http://localhost:8080/'
+            })
+        }
     };
 
-    onLoad() {
-        console.log('hello, this is my first miniprogram.');
+    async onLoad() {
+        const res = await wepy.login();
+        console.log(res);
+        console.log('hello')
     }
 }
 </script>
