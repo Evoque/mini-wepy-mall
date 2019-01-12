@@ -1,0 +1,15 @@
+{
+	"description": "小程序商城",
+	"setting": {
+		"urlCheck": true,
+		"es6": false,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true
+	},
+	"compileType": "miniprogram",
+	"appid": "wx366d06a5e74b1b2c",
+	"projectname": "mini-wepy-mall",
+	"miniprogramRoot": "dist/",
+	"condition": {}
+}

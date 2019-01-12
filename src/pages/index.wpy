@@ -1,0 +1,37 @@
+
+
+<style lang="less">
+</style>
+
+<template>
+    <view class="container">
+        <h1>Hello, Evoque. Let's mini program </h1>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+// import { connect } from 'wepy-redux';
+// import Toast from 'wepy-com-toast';
+
+// @connect({ 
+// })
+
+export default class Index extends wepy.page {
+    components = {
+    };
+    data = {
+    };
+
+    computed = {
+    }
+
+    methods = {
+    };
+
+    onLoad() {
+        console.log('hello, this is my first miniprogram.');
+    }
+}
+</script>
+
