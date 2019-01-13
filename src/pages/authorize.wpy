@@ -46,19 +46,55 @@ page {
 <script>
 
 import wepy from 'wepy';
-// import api from '@/api/api';
-import { SYSTEM_INFO, USER_SPECIAL_INFO, USER_INFO } from '@/utils/constant';
+import api from 'utils/api';
+import { SYSTEM_INFO, USER_SPECIAL_INFO, USER_INFO } from 'utils/constant';
 
 export default class Authorize extends wepy.page {
     config = {
         navigationBarTitleTest: '授权登录'
     };
 
+    /**
+     * 
+     *  1. **getSetting**: 获取用户的当前设置。返回值中只会出现小程序已经向用户请求过的权限;
+     *  2. **getStorageSync(USER_INFO)**: 用户缓存信息;
+     *      a. 如果没有缓存信息: **getUserInfo**: 获取用户信息
+     *      b. **setStorage(USER_INFO, data.userInfo)**: 设置缓存信息 
+     *      c. **login**: 获取登录凭证(code),通过凭证换取用户登录信息，openid、session_key;用户数据的加解密通讯需要依赖会话密钥完成
+     *      d. **getSystemInfoSync**: 设备信息
+     *      e. **wxJsCode2Session:**
+     *  3. 切换首页
+     */
     async onLoad() {
-        let res = await wepy.getSetting(); 
-        if(res && res.authSetting["scope.userInfo"]) {
+        let res = await wepy.getSetting();
+        console.log('getSetting', res);
+        if (res && res.authSetting["scope.userInfo"]) {
             const userInfo = wepy.getStorageSync(USER_INFO);
-            
+            console.log('userInfo_Storage', userInfo);
+            if (!userInfo.nickName) {
+                let data = await wepy.getUserInfo();
+                console.log('getUserInfo', data);
+                if (data) {
+                    wepy.setStorageSync(USER_INFO, data.userInfo);
+                }
+                const loginRes = await wepy.login();
+                console.log('login: ', loginRes);
+                if (loginRes.code) {
+                    let systemInfo = wepy.getSystemInfoSync();
+                    wepy.setStorageSync(SYSTEM_INFO, systemInfo);
+
+                    const rlt = await api.wxJsCode2Session({
+                        data: {
+                            jsCode: loginRes.code,
+                            nickName: data.userInfo.nickName
+                        }
+                    });
+                    console.log('rlt', rlt);
+                    console.log('!!!');
+                }
+
+            }
+            // wepy.switchTab({ url: '/pages/home' });
         }
     }
 
