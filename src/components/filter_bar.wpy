@@ -1,0 +1,110 @@
+
+<style lang="less">
+.filter-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  margin-top: 20rpx;
+
+  .filter-item {
+    color: #000;
+    font-size: 26rpx;
+    padding: 12rpx 20rpx;
+  }
+  .filter-item-active {
+    color: #f03939;
+  }
+
+  .grid {
+    display: flex;
+    align-items: center;
+    /*向上*/
+    .arrow_up_red {
+      border-color: transparent transparent #f03939;
+    }
+    .arrow_down_red {
+      border-color: #f03939 transparent transparent;
+    }
+    .arrow_up_gray {
+      border-color: transparent transparent #ccc;
+    }
+    .arrow_down_gray {
+      border-color: #ccc transparent transparent;
+    }
+    .arrow_up {
+      width: 0;
+      height: 0;
+      border-width: 0 10rpx 10rpx;
+      border-style: solid;
+      margin: 9rpx 10rpx;
+      position: relative;
+    }
+    /*向下*/
+    .arrow_down {
+      width: 0;
+      height: 0;
+      border-width: 10rpx 10rpx 0;
+      border-style: solid;
+      /*灰 透明 透明 */
+      margin: 9rpx 10rpx;
+      position: relative;
+    }
+  }
+}
+</style>
+
+<template>
+    <view class="filter-bar-container">
+        <view class="filter-tab"> 
+            <view class="filter-item {{type === 'zonghe' ? 'filter-item-active': ''}}" @tap="onTap('zonghe')">综合</view>
+            <view class="filter-item {{type === 'sale' ? 'filter-item-active': ''}}" @tap="onTap('sale')">销量</view>
+            <view class="grid filter-item">
+                <view class="price {{type === 'price' ? 'filter-item-active' : ''}}" @tap="onTap('price')">价格</view>
+                <view>
+                <view class="arrow_up {{arrowType=='desc' ? 'arrow_up_red' : 'arrow_up_gray'}}"></view> 
+                <view class="arrow_down {{arrowType=='asc' ? 'arrow_down_red' : 'arrow_down_gray'}} "></view>
+                </view>
+            </view>
+            <view class="filter-item" >筛选<i class="iconfont icon-filter"></i></view>
+        </view>
+
+        <!-- filter slider -->
+    </view>
+</template>
+
+<script>
+
+import wepy from 'wepy';
+export default class FilterBar extends wepy.component {
+    data = {
+        type: '', 
+        arrowType: ''
+        
+    };
+
+    methods = {
+        onTap(type) {
+            if (this.type === type && type !== 'price') return false;
+
+            if (type === 'price') {
+                this.arrowType = this.arrowType === 'asc' ? 'desc' : 'asc';
+            }
+            this.type = type;
+            this.$apply();
+        }
+    };
+
+    watch = {
+        type(newValue) {
+            this.$emit("currentType", { name: newValue, type: 'desc' });
+        },
+        arrowType(newValue, oldValue) {
+            if (oldValue && newValue) {
+                this.$emit("currentType", { name: "price", type: newValue });
+            }
+        }
+    }
+}
+
+</script>
