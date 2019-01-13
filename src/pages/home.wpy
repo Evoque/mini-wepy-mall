@@ -33,6 +33,26 @@
     display: block;
   }
 }
+
+.nav_list {
+  color: #404040;
+  display: flex;
+  font-size: 26rpx;
+  justify-content: space-between;
+  padding: 17rpx 50rpx;
+  navigator {
+    text-align: center;
+  }
+  .nav_icon {
+    height: 80rpx;
+    margin: 0 auto;
+    width: 80rpx;
+    margin-bottom: 14rpx;
+  }
+  .nav_text {
+    font-size: 26rpx;
+  }
+}
 </style>
 
 <template> 
@@ -59,6 +79,27 @@
             </view>
         </view>
 
+        <view class="nav_list">
+            <navigator open-type="navigate" url="/pages/sign_in">
+                <image src="../images/icon_nav_01_new.png" class="nav_icon"></image>
+                <view class="nav_text">签到有礼</view>
+            </navigator>
+            <navigator open-type="navigate" url="/pages/exchange_goods">
+                <image src="../images/icon_nav_02_new.png" class="nav_icon"></image>
+                <view class="nav_text">换货专区</view>
+            </navigator>
+            <navigator open-type="navigate" url="/pages/wholesale">
+                <image src="../images/icon_nav_03_new.png" class="nav_icon"></image>
+                <view class="nav_text">特价专区</view>
+            </navigator>
+            <navigator open-type="navigate" url="/pages/replenishment_goods">
+                <image src="../images/icon_nav_04_new.png" class="nav_icon"></image>
+                <view class="nav_text">我要补货</view>
+            </navigator>
+        </view>
+
+        <discover :list.sync="discoverList"></discover>
+
     </view>
 
 </template>
@@ -66,6 +107,7 @@
 <script>
 import wepy from 'wepy';
 import * as api from 'utils/api';
+import Discover from 'components/discover';
 
 export default class Home extends wepy.page {
 
@@ -73,11 +115,13 @@ export default class Home extends wepy.page {
         navigationBarTitleText: 'Evoque-商城'
     };
 
-    components = {};
+    components = {
+        discover: Discover
+    };
 
     data = {
-        /** header广告列表 */
-        adList: []
+        adList: [],
+        discoverList: []
     };
 
     methods = {
@@ -95,7 +139,33 @@ export default class Home extends wepy.page {
         }
     }
 
-    onLoad() {
+    async getDiscoverList(currentPage, size) {
+    let that = this;
+    const json = await api.getHomeDisvocerList({
+      query: {
+        page: currentPage || 1,
+        size: size || 10
+      }
+    });
+    if (json.data.code == 0) {
+      that.discoverList = [...that.discoverList, ...json.data.list];
+
+      if (json.data.page_total) { // 后台的数据不再返回page_total
+        that.page_total = json.data.page_total
+      };
+      if (json.data.page_total == 0) {
+        //暂无数据
+        that.is_empty = true;
+      }
+      that.$apply();
+    } else {
+      tip.error(json.data.msg);
+    }
+    that.showLoading = false;
+  }
+
+    onLoad() { 
+        this.getDiscoverList();
         this.getAdList();
     }
 }

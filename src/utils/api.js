@@ -19,8 +19,11 @@ const getAdList = _ => wxRequest(`${apiMall}/api/adverts/list`);
  */
 const getGoodsList = params => wxRequest(`${apiMall}/api/home/hostGoodsList`, params);
 
+const getHomeDisvocerList = (params) => wxRequest(`${apiMall}/api/mall/discoverList`, params);
+
 export {
     wxJsCode2Session,
     getAdList,
-    getGoodsList
+    getGoodsList,
+    getHomeDisvocerList
 };
