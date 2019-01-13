@@ -38,7 +38,7 @@ page {
             <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
                 授权
             </button>
-        </view>
+        </view> 
     </view>
 
 </template>
@@ -46,12 +46,12 @@ page {
 <script>
 
 import wepy from 'wepy';
-import api from 'utils/api';
+import * as api from 'utils/api';
 import { SYSTEM_INFO, USER_SPECIAL_INFO, USER_INFO } from 'utils/constant';
 
 export default class Authorize extends wepy.page {
     config = {
-        navigationBarTitleTest: '授权登录'
+        navigationBarTitleText: '授权登录'
     };
 
     /**
@@ -62,10 +62,11 @@ export default class Authorize extends wepy.page {
      *      b. **setStorage(USER_INFO, data.userInfo)**: 设置缓存信息 
      *      c. **login**: 获取登录凭证(code),通过凭证换取用户登录信息，openid、session_key;用户数据的加解密通讯需要依赖会话密钥完成
      *      d. **getSystemInfoSync**: 设备信息
-     *      e. **wxJsCode2Session:**
+     *      e. **wxJsCode2Session:**: 获取登录信息, openid(唯一用户身份标识), session_key
      *  3. 切换首页
      */
-    async onLoad() {
+    async onLoad() { 
+        return;
         let res = await wepy.getSetting();
         console.log('getSetting', res);
         if (res && res.authSetting["scope.userInfo"]) {
@@ -79,10 +80,9 @@ export default class Authorize extends wepy.page {
                 }
                 const loginRes = await wepy.login();
                 console.log('login: ', loginRes);
-                if (loginRes.code) {
+                if (!loginRes.code) {
                     let systemInfo = wepy.getSystemInfoSync();
                     wepy.setStorageSync(SYSTEM_INFO, systemInfo);
-
                     const rlt = await api.wxJsCode2Session({
                         data: {
                             jsCode: loginRes.code,
@@ -90,18 +90,48 @@ export default class Authorize extends wepy.page {
                         }
                     });
                     console.log('rlt', rlt);
-                    console.log('!!!');
+                    if (rlt.data.result && rlt.data.data.openid) {
+                        wepy.setStorageSync(USER_SPECIAL_INFO, rlt.data.data);
+                    }
                 }
 
             }
-            // wepy.switchTab({ url: '/pages/home' });
+            wepy.switchTab({ url: '/pages/home' });
         }
     }
 
     async onGotUserInfo(e) {
-        if (e.detail.errMsg === 'getUserInfo:ok') {
-            const res = await wepy.login();
-            console.log(res);
+        const { detail } = e;
+        if (detail.errMsg === 'getUserInfo:ok') {
+            const { code } = await wepy.login();
+            if (code) {
+                wepy.setStorageSync(USER_INFO, detail.userInfo);
+                const systemInfo = wepy.getSystemInfoSync();
+                wepy.setStorageSync(SYSTEM_INFO, systemInfo);
+
+
+                const rlt = await api.wxJsCode2Session({
+                    data: {
+                        jscode: code,
+                        nickName: detail.userInfo.nickName
+                    }
+                });
+                if (rlt.data.result) {
+                    const { data } = rlt.data;
+                    if (data.openid) {
+                        wepy.setStorageSync(USER_SPECIAL_INFO, data);
+                        wepy.switchTab({ url: '/pages/home' });
+                    }
+                } else {
+                    const failureConfirm = await wepy.showModal({
+                        title: 'appid有误',
+                        content: '授权失败'
+                    });
+                    if (failureConfirm.confirm) {
+                        wepy.switchTab({ url: '/pages/home' });
+                    }
+                }
+            }
         }
     }
 }
