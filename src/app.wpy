@@ -16,8 +16,11 @@ export default class extends wepy.app {
     }
     config = {
         pages: [
-            // 'pages/index',
-            'pages/authorize'
+            'pages/authorize',
+            'pages/home',
+            'pages/classify',
+            'pages/shop_cart',
+            'pages/info'
         ],
         window: {
             backgroundTextStyle: 'dark',
@@ -26,8 +29,42 @@ export default class extends wepy.app {
             navigationBarTextStyle: 'black',
             enablePullDownRefresh: false,
             backgroundColor: '#efefef'
+        },
+        tabBar: {
+            color: '#999',
+            selectedColor: '#ff6a3c',
+            backgroundColor: '#fff',
+            borderStyle: 'black',
+            list: [
+                {
+                    pagePath: 'pages/home',
+                    text: '首页',
+                    iconPath: 'images/icon_home.png',
+                    selectedIconPath: 'images/icon_home_active.png'
+                },
+                {
+                    pagePath: 'pages/classify',
+                    text: '分类',
+                    iconPath: 'images/icon_classify.png',
+                    selectedIconPath: 'images/icon_classify_active.png'
+                },
+                {
+                    text: '购物车',
+                    pagePath: 'pages/shop_cart',
+                    iconPath: 'images/icon_shop_cart.png',
+                    selectedIconPath: 'images/icon_shop_cart_active.png'
+                },
+                {
+                    text: '我',
+                    pagePath: 'pages/info',
+                    iconPath: 'images/icon_info.png',
+                    selectedIconPath: 'images/icon_info_active.png'
+                }
+            ]
         }
     }
-}
 
+
+
+}
 </script>

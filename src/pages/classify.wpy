@@ -1,0 +1,16 @@
+
+<template>
+    <view>
+        <h1>This is Classify.</h1>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class Classify extends wepy.page {
+
+    onLoad() {
+        console.log('welcome to Classify.')
+    }
+}
+</script>

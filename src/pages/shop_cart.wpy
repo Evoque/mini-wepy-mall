@@ -1,0 +1,16 @@
+
+<template>
+    <view>
+        <h1>Shop Cart</h1>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class ShopCart extends wepy.page {
+    onLoad() {
+        console.log('on ShopCart')
+    }
+}
+
+</script>

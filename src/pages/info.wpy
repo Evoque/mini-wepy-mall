@@ -1,0 +1,18 @@
+<template>
+    <view>
+        <h1>Info</h1>
+    </view>
+</template>
+
+<script>
+
+import wepy from 'wepy';
+
+export default class Info extends wepy.page {
+    onLoad() {
+        console.log(' on Info')
+    }
+}
+
+</script>
+
