@@ -51,6 +51,12 @@
       position: relative;
     }
   }
+
+  .icon-filter {
+    font-size: 26rpx;
+    color: #666;
+    margin-left: 5rpx;
+  }
 }
 </style>
 
@@ -66,7 +72,7 @@
                 <view class="arrow_down {{arrowType=='asc' ? 'arrow_down_red' : 'arrow_down_gray'}} "></view>
                 </view>
             </view>
-            <view class="filter-item" >筛选<i class="iconfont icon-filter"></i></view>
+            <view class="filter-item" @tap="customFilter">筛选<i class="iconfont icon-filter"></i></view>
         </view>
 
         <!-- filter slider -->
@@ -78,9 +84,9 @@
 import wepy from 'wepy';
 export default class FilterBar extends wepy.component {
     data = {
-        type: '', 
+        type: '',
         arrowType: ''
-        
+
     };
 
     methods = {
@@ -92,6 +98,9 @@ export default class FilterBar extends wepy.component {
             }
             this.type = type;
             this.$apply();
+        },
+        customFilter() {
+            this.$invoke('filterSlider', 'swictchOverlay', true);
         }
     };
 
