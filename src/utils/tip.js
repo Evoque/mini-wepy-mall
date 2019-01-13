@@ -37,6 +37,16 @@ export default class Tip {
         }
     }
 
+    static error(title, onHide) {
+        wepy.showToast({
+            title,
+            image: '../images/error.png',
+            mask: true,
+            duration: 500,
+            complete: onHide
+        });
+    }
+
 }
 
 Tip.isLoading = false;

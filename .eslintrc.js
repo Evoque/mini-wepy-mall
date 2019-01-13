@@ -31,6 +31,7 @@ module.exports = {
     'no-multiple-empty-lines': 0,
     'indent': 0,
     'valid-v-on': 0,
-    'v-on': 0
+    'v-on': 0,
+    'vue/no-parsing-error': 0
   }
 }

@@ -1,0 +1,23 @@
+<style lang="less">
+
+</style>
+
+
+<template>
+    
+</template>
+
+
+<script>
+    import wepy from 'wepy';
+    export default class ShopGridList extends wepy.component {
+        props = {
+            list: [],
+            purchasetype: {
+                default: 1, // 1 || 2
+            },
+            
+        }
+    }
+</script>
+

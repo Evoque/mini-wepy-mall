@@ -1,0 +1,117 @@
+
+<style lang="less">
+page {
+  background-color: #fff;
+}
+
+.img_box {
+  height: 370rpx;
+}
+
+.discover_img {
+  width: 100%;
+  height: 100%;
+}
+
+.info {
+  margin-top: 30rpx;
+  padding: 0rpx 30rpx;
+  color: #000;
+
+  .title {
+    margin-bottom: 20rpx;
+  }
+  .doc {
+    padding-top: 15rpx;
+    display: flex;
+    align-items: center;
+    .lx {
+      font-size: 20rpx;
+      margin-right: 20rpx;
+    }
+  }
+}
+</style>
+
+<template>
+    <view class="container"> 
+        <view>
+            <view class="img_box">
+                <image class="discover_img" src="{{cate.logo}}" />
+            </view>
+            <view class="info">
+                <view class="title">{{cate.name}}</view>
+                <view wx:for="{{cate.attrs}}" wx:key="item">
+                    <view class="doc">
+                        <i class="lx">◆</i>{{item.attrName.attrName}}：
+                        <view wx:for="{{item.attrValList}}" wx:for-item="subItem" wx:key="index">{{subItem.attrVal}}</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+
+        <view class="filter"></view>
+        <view class="shop_list">
+            
+        </view>
+    </view>
+</template>
+
+<script>
+
+import wepy from 'wepy';
+import * as api from 'utils/api';
+
+export default class HomeDetail extends wepy.page {
+
+    config = {
+        navigationBarTitleText: ''
+    }
+
+    data = {
+        cate: {},
+        catCode: '',
+        sort: 1,
+        skuval: '',
+        list: [],
+        page_total: 0,
+        is_empty: false,
+        showLoading: true,
+    }
+
+    async getGoodsList(page = 1, size = 10) {
+        const { data } = await api.getGoodsList({
+            data: {
+                page, size,
+                cateCode: this.cateCode,
+                sort: this.sort,
+                skuval: this.skuval
+            }
+        });
+
+        console.log(data);
+        const { code, category, list, page_total, msg } = data;
+        if (code == 0) {
+            this.cate = category;
+            wepy.setNavigationBarTitle({ title: category.name });
+            this.list = this.list.concat(list);
+            this.page_total = page_total;
+            if (page_total === 0) {
+                this.is_empty = true;
+            }
+        } else {
+            tip.error(msg);
+        }
+        this.showLoading = false;
+        this.$apply();
+    }
+
+    onLoad(option) {
+        const { code } = option;
+        this.cate = {};
+        this.cateCode = code;
+        this.getGoodsList();
+    }
+}
+
+</script>

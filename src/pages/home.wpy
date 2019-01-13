@@ -1,15 +1,64 @@
 
-<template>
-    <view>
-        <h1>This is Home.</h1>
+<style lang="less">
+.swiper {
+  height: 348rpx;
+}
+
+.slide-image {
+    width: 100%;
+    height: 100%;
+}
+
+</style>
+
+<template> 
+
+    <view class="container">
+        <swiper class="swiper" indicator-active-color="#fff" indicator-dots="true" autoplay="true" interval="3000" duration="1000" circular="true">
+            <block wx:for="{{adList}}" wx:key="key">
+                <swiper-item>
+                    <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})"/>
+                </swiper-item>
+            </block>
+        </swiper>
     </view>
+
 </template>
 
 <script>
 import wepy from 'wepy';
+import * as api from 'utils/api';
+
 export default class Home extends wepy.page {
+
+    config = {
+        navigationBarTitleText: 'Evoque-商城'
+    };
+
+    components = {};
+
+    data = {
+        /** header广告列表 */
+        adList: []
+    };
+
+    methods = {
+        goToAdvert(url){
+            if(!url) return; 
+            wepy.navigateTo({url});
+        }
+    }
+
+    async getAdList() {
+        const res = await api.getAdList();
+        if (res.data.code == 0) {
+            this.adList = res.data.list;
+            this.$apply();
+        }
+    }
+
     onLoad() {
-        console.log('welcome to Home.')
+        this.getAdList();
     }
 }
 </script>
