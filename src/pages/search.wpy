@@ -42,9 +42,9 @@
     <search @searchValue.user="doSearch"></search>
     <filterBar wx:if="{{list.length>0||skuval !==''}}" @currentType.user="currentType"></filterBar>
     <view wx:if="{{list.length>0}}"> 
-      <shopGridList :purchasetype.sync="purchasetype" :list.sync="list"></shopGridList> 
-      <bottomLoadMore :showLoading.sync="showLoading" message="正在加载"></bottomLoadMore> 
-      <placeholder :is_empty.sync="is_empty" message="暂无发现数据"></placeholder>
+      <shopGridList :purchasetype.sync="purchasetype" :list.sync="list" /> 
+      <bottomLoadMore :show.sync="showLoading" message="正在加载" />
+      <placeholder :show.sync="is_empty" message="暂无发现数据" />
     </view>
     <view class="history {{show?'':'hidden'}}" wx:else>
       <view class="doc">历史记录</view>
@@ -62,15 +62,16 @@
 
 <script>
 import wepy from 'wepy';
-import api from '@/api/api';
-import tip from '@/utils/tip'
+import * as api from 'utils/api';
+import tip from 'utils/tip'
 import { SYSTEM_INFO, USER_SPECICAL_INFO } from '@/utils/constant';
-import Searchs from '@/components/search'
-import FilterBar from "../components/filter_bar"
-import ShopGridList from '@/components/shop_grid_list'
-import BottomLoadMore from "../components/common/bottomLoadMore"
-import Placeholder from "../components/common/placeholder"
-import FilterSlider from '@/components/filterSlider'
+import Searchs from 'components/search';
+import FilterBar from 'components/filter_bar';
+import ShopGridList from 'components/shop_grid_list';
+import BottomLoadMore from 'components/common/bottomLoadMore';
+import Placeholder from 'components/common/placeholder';
+import FilterSlider from 'components/filter_slider';
+
 export default class Search extends wepy.page {
     config = {
         navigationBarTitleText: '搜索',
@@ -102,17 +103,17 @@ export default class Search extends wepy.page {
         skuval: ""
     }
     async getKeyWordHisList() {
-        let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-        let openId = userSpecialInfo.openid;
-        const json = await api.searchKeywordList({
-            query: {
-                openId: openId
-            }
-        });
-        if (json.data.code == 0) {
-            this.keywordhisList = json.data.list;
-        }
-        this.$apply();
+        // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+        // let openId = userSpecialInfo.openid;
+        // const json = await api.searchKeywordList({
+        //     query: {
+        //         openId: openId
+        //     }
+        // });
+        // if (json.data.code == 0) {
+        //     this.keywordhisList = json.data.list;
+        // }
+        // this.$apply();
     }
     setTitle(title) {
         wepy.setNavigationBarTitle({
