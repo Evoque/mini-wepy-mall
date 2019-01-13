@@ -74,20 +74,25 @@
             </view>
             <view class="filter-item" @tap="customFilter">筛选<i class="iconfont icon-filter"></i></view>
         </view>
-
-        <!-- filter slider -->
+ 
+        <filterSlider />
     </view>
 </template>
 
 <script>
 
 import wepy from 'wepy';
+import FilterSlider from './filter_slider';
+
 export default class FilterBar extends wepy.component {
     data = {
         type: '',
         arrowType: ''
-
     };
+    
+    components = {
+        filterSlider: FilterSlider
+    }
 
     methods = {
         onTap(type) {
